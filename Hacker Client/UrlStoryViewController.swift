@@ -8,13 +8,17 @@
 
 import UIKit
 
-class UrlStoryViewController: UIViewController {
+class UrlStoryViewController: UIViewController{
     
     var storyURL: String?
     @IBOutlet weak var webView: UIWebView!
+    @IBOutlet weak var progressIndicator: UIActivityIndicatorView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        webView.delegate = self
+        progressIndicator.startAnimating()
         
         guard let recivedUrl = storyURL else {
             print("URL isnot found")
@@ -24,5 +28,14 @@ class UrlStoryViewController: UIViewController {
         let url = URL(string: recivedUrl)!
         let requestObj = URLRequest(url: url)
         webView.loadRequest(requestObj)
+    }
+}
+
+extension UrlStoryViewController: UIWebViewDelegate{
+//    func webViewDidStartLoad(_ webView: UIWebView) {
+//        progressIndicator.startAnimating()
+//    }
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        progressIndicator.stopAnimating()
     }
 }

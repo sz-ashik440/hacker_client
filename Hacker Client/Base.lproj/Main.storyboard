@@ -19,6 +19,24 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="sectionIndexBackgroundColor" red="0.15157877904166669" green="0.16541341445833335" blue="0.24150390925000004" alpha="1" colorSpace="calibratedRGB"/>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="O7P-eo-t5P" customClass="LoadingFooter" customModule="Hacker_Client" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="178" width="375" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Pgr-Qh-VWi">
+                                    <rect key="frame" x="177" y="5" width="20" height="34"/>
+                                </activityIndicatorView>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="Pgr-Qh-VWi" firstAttribute="top" secondItem="O7P-eo-t5P" secondAttribute="top" constant="5" id="0u2-Sw-1Gk"/>
+                                <constraint firstItem="Pgr-Qh-VWi" firstAttribute="centerX" secondItem="O7P-eo-t5P" secondAttribute="centerX" id="6b2-o4-bR6"/>
+                                <constraint firstAttribute="bottom" secondItem="Pgr-Qh-VWi" secondAttribute="bottom" constant="5" id="XMq-9y-giM"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="loadingIndicator" destination="Pgr-Qh-VWi" id="2Vj-Iu-VOA"/>
+                            </connections>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="150" id="Bnx-ys-UUn" customClass="StoryTableViewCell" customModule="Hacker_Client" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="150"/>
@@ -72,7 +90,7 @@
                                             <rect key="frame" x="295" y="0.0" width="80" height="150"/>
                                             <color key="backgroundColor" red="0.94880131740196072" green="0.91103036917892155" blue="0.87499904258578431" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="80" id="eVd-RG-sAE"/>
+                                                <constraint firstAttribute="width" constant="80" id="ptR-eT-pDL"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <state key="normal">
@@ -123,6 +141,9 @@ more</string>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Stories" id="JkP-HT-QpB"/>
+                    <connections>
+                        <outlet property="tableViewFooter" destination="O7P-eo-t5P" id="wNv-en-gp9"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ds4-MM-Hme" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -144,16 +165,22 @@ more</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="z3r-Ra-5Xj">
+                                <rect key="frame" x="177" y="323" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="YQk-dR-YJi" firstAttribute="top" secondItem="NmM-xz-6h7" secondAttribute="bottom" id="71Y-m7-dmx"/>
                             <constraint firstItem="NmM-xz-6h7" firstAttribute="leading" secondItem="GWo-Wh-dBQ" secondAttribute="leading" id="Dhc-uk-icb"/>
+                            <constraint firstItem="z3r-Ra-5Xj" firstAttribute="centerX" secondItem="GWo-Wh-dBQ" secondAttribute="centerX" id="fC8-Jy-FZr"/>
                             <constraint firstAttribute="trailing" secondItem="NmM-xz-6h7" secondAttribute="trailing" id="gfL-fV-fY1"/>
                             <constraint firstItem="NmM-xz-6h7" firstAttribute="top" secondItem="UVO-1d-PeP" secondAttribute="bottom" id="nPJ-nJ-5g1"/>
+                            <constraint firstItem="z3r-Ra-5Xj" firstAttribute="centerY" secondItem="GWo-Wh-dBQ" secondAttribute="centerY" id="smc-Ui-v5f"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="progressIndicator" destination="z3r-Ra-5Xj" id="oE1-UH-OW5"/>
                         <outlet property="webView" destination="NmM-xz-6h7" id="3Ac-eJ-KTH"/>
                     </connections>
                 </viewController>

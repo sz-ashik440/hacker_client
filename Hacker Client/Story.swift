@@ -22,15 +22,15 @@ class Story{
     var type: String?
     
     required init(json: JSON){
-        self.id = json["id"].int
-        self.title = json["title"].string
-        self.by = json["by"].string
-        self.time = json["time"].double
-        self.url = json["url"].string
-        self.score = json["score"].int
+        self.id = json["id"].intValue
+        self.title = json["title"].stringValue
+        self.by = json["by"].stringValue
+        self.time = json["time"].doubleValue
+        self.url = json["url"].stringValue
+        self.score = json["score"].intValue
         self.kids = json["kids"].arrayValue.map({$0.intValue})
-        self.descendants = json["descendants"].int
-        self.type = json["type"].string
+        self.descendants = json["descendants"].intValue
+        self.type = json["type"].stringValue
     }
     
     class func getStoryID(complition: @escaping ([Int]) -> Void){
@@ -46,8 +46,11 @@ class Story{
                 
             }
             let json = JSON(data: rawData)
-            let storyIDs = json.arrayObject as! [Int]
-            complition(storyIDs)
+            let storyIDs = json.arrayValue.map({$0.intValue})
+            
+            DispatchQueue.main.async {
+                complition(storyIDs)
+            }
         }
     }
     

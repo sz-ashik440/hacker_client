@@ -12,26 +12,53 @@ import SwiftyJSON
 
 class StoryViewController: UITableViewController {
     
+    @IBOutlet weak var tableViewFooter: LoadingFooter!
+    
     var stories: [Story] = []
+    var storyIDs: [Int] = []
     let storyToWebSegue = "gotoWeb"
+    let storySize = 10
+    
+    var arrayLoaded = false
+    var loading = false {
+        didSet {
+            tableViewFooter.isHidden = !loading
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.estimatedRowHeight = 240
+        tableView.estimatedRowHeight = 340
         tableView.rowHeight = UITableViewAutomaticDimension
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.showsVerticalScrollIndicator = false
+        //tableView.showsVerticalScrollIndicator = false
         
         Story.getStoryID(){ (storyIDs) in
-            // print("Total Stories: \(storyIDs.count)")
-            let idToSend = Array(storyIDs[0..<20])
+            self.storyIDs = storyIDs
+            self.arrayLoaded = true
+
+            self.loadStories(offset: 0, size: self.storySize)
+        }
+    }
+    
+    func loadStories(offset: Int, size: Int){
+        if (!loading) {
+            loading = true
+            
+            let idToSend = Array(storyIDs[offset..<size])
+            
             Story.getStories(storyIDs: idToSend){ recivedStories in
-                self.stories = recivedStories
+                
+                for story in recivedStories {
+                    self.stories.append(story)
+                }
+                
                 self.tableView.reloadData()
+                self.loading = false
             }
         }
     }
@@ -47,13 +74,11 @@ class StoryViewController: UITableViewController {
         guard let title = storyObj.title,
             let score = storyObj.score,
             let postedBy = storyObj.by,
-            let postedTime = storyObj.time else {
+            let postedTime = storyObj.time,
+            let postURL = storyObj.url,
+            let descendants = storyObj.descendants else {
                 print("Something is wrong")
                 return cell
-        }
-        guard let descendants = storyObj.descendants else {
-            print("Bomb in descendants")
-            return cell
         }
         
         cell.titleLabel.text = title
@@ -64,7 +89,7 @@ class StoryViewController: UITableViewController {
         cell.scoreLabel.text = "\(score)"
         cell.postedByLabel.text = postedBy
         cell.timeLabel.text = Date().offset(from: postedTime)
-        cell.urlLabel.text = storyObj.url != nil ? "\(storyObj.url!)" : ""
+        cell.urlLabel.text = postURL
         
         cell.commentButton.titleLabel?.textAlignment = .center
         cell.commentButton.titleLabel?.lineBreakMode = .byWordWrapping
@@ -83,6 +108,17 @@ class StoryViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let currentOffset = scrollView.contentOffset.y
+        let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
+        
+        if (maximumOffset - currentOffset) <= 10 {
+            if arrayLoaded {
+                loadStories(offset: stories.count, size: (stories.count + storySize))
+            }
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == storyToWebSegue {
             if let webviewVC = segue.destination as? UrlStoryViewController,
@@ -93,4 +129,6 @@ class StoryViewController: UITableViewController {
             }
         }
     }
+    
+    
 }
