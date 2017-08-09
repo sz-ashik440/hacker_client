@@ -17,6 +17,7 @@ class StoryViewController: UITableViewController {
     var stories: [Story] = []
     var storyIDs: [Int] = []
     let storyToWebSegue = "gotoWeb"
+    let storyToCommentsSegue = "gotoComments"
     let storySize = 10
     
     var arrayLoaded = false
@@ -69,6 +70,7 @@ class StoryViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! StoryTableViewCell
+        
         let storyObj = stories[indexPath.row]
         
         guard let title = storyObj.title,
@@ -95,13 +97,22 @@ class StoryViewController: UITableViewController {
         cell.commentButton.titleLabel?.lineBreakMode = .byWordWrapping
         cell.commentButton.setTitle("💬\n\(descendants)", for: .normal)
         
+//        cell.tapComments = { [weak self] (cell) in
+//            print(descendants)
+//        }
         
-        cell.tapComments = { [weak self] (cell) in
-            print(descendants)
-        }
+//        cell.commentButton.addTarget(self, action: #selector(commentTapped), for: .touchUpInside)
+        
+        //cell.delegate = self
+        
+        cell.commentButton.tag = indexPath.row
         
         cell.selectionStyle = .none
         return cell
+    }
+    
+    func commentTapped(){
+        performSegue(withIdentifier: storyToCommentsSegue, sender: self)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -120,15 +131,43 @@ class StoryViewController: UITableViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == storyToWebSegue {
-            if let webviewVC = segue.destination as? UrlStoryViewController,
+        
+        guard let identifier = segue.identifier else {
+            print("Identifier is lost")
+            return
+        }
+        
+        switch identifier {
+        case storyToWebSegue:
+            guard let webviewVC = segue.destination as? UrlStoryViewController,
                 let cell = sender as? StoryTableViewCell,
-                let indexPath = tableView.indexPath(for: cell){
-                    let storyObj = stories[indexPath.row]
-                    webviewVC.storyURL = storyObj.url
+                let indexPath = tableView.indexPath(for: cell) else{
+                    print("Something wrong with webview controller peremiter")
+                    return
             }
+            let storyObj = stories[indexPath.row]
+            webviewVC.storyURL = storyObj.url
+        
+        case storyToCommentsSegue:
+            guard let commentVC = segue.destination as? CommentsTableViewController,
+                let button = sender as? UIButton else {
+                    print("Something wrong with commentview controller peremiter")
+                    return
+            }
+            
+            let storyObj = stories[button.tag]
+            commentVC.recivedStory = storyObj
+//            print("Its here in comment segue")
+        default:
+            print("Wrong Segue identifier")
         }
     }
-    
-    
 }
+
+
+//extension StoryViewController: SegueCellDelegate{
+//    func callSegueFromCell(story storyObj: AnyObject) {
+//        print("Its working with protocol thingy")
+//        performSegue(withIdentifier: storyToCommentsSegue, sender: storyObj)
+//    }
+//}

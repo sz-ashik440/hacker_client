@@ -17,7 +17,9 @@ class StoryTableViewCell: UITableViewCell {
     @IBOutlet weak var commentButton: UIButton!
     @IBOutlet weak var urlLabel: UILabel!
     
-    var tapComments: ((UITableViewCell) -> Void)?
+    // var tapComments: ((UITableViewCell) -> Void)?
+    
+    // var delegate: SegueCellDelegate!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -30,6 +32,11 @@ class StoryTableViewCell: UITableViewCell {
     }
 
     @IBAction func gotoComments(_ sender: UIButton) {
-        tapComments?(self)
+        //tapComments?(self)
+        
     }
 }
+
+//protocol SegueCellDelegate{
+//    func callSegueFromCell(story storyObj: AnyObject)
+//}
